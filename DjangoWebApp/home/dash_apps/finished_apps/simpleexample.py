@@ -15,7 +15,7 @@ app.css.append_css({'external_url': '/static/css/sb-admin-2.css'})
 
 path_parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
 os.chdir(path_parent)
-data = pd.read_csv('fct_entries.csv')
+data = pd.read_csv('TimeTracker/fct_entries.csv')
 
 data['duration'] = pd.to_timedelta(data['duration'])
 data['date'] = pd.to_datetime(data['startTime'].values).strftime('%a, %b %d %Y')
