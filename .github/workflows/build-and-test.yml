@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
+          
+      # Ubuntu packages required to connect to database
+      - name: Install psycopg2 prerequisites
+        run: sudo apt-get install python-dev libpq-dev
 
       - name: Install dependencies
         run: |
