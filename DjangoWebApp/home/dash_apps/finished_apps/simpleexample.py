@@ -13,7 +13,8 @@ app = DjangoDash('SimpleExample')
 
 app.css.append_css({'external_url': '/static/css/sb-admin-2.css'})
 
-os.chdir('/')
+path_parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+os.chdir(path_parent)
 data = pd.read_csv('fct_entries.csv')
 
 data['duration'] = pd.to_timedelta(data['duration'])
