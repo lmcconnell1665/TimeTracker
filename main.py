@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 import requests
 import pandas as pd
 from decouple import config
+import re
+from textblob import TextBlob
+import numpy as np
 
 def main():
     """
@@ -28,22 +31,24 @@ def main():
     data_dict = json.loads(data) # creates a dict from the json payload
     fct_entries = generate_entries_df(data_dict) # creates a dataframe and adds a duration calculation
 
-    # # dimActivities
+    # dimActivities
     auth_token = fetch_token(parameters) # gets the authorization token
     data = fetch_data(auth_token, 'dimActivities') # fetches the data
     data_dict = json.loads(data) # creates a dict from the json payload
     dim_activities = generate_activities_df(data_dict) # creates a dataframe
 
-    # # dimTags
+    # dimTags
     auth_token = fetch_token(parameters) # gets the authorization token
     data = fetch_data(auth_token, 'dimTags') # fetches the data
     data_dict = json.loads(data) # creates a dict from the json payload
     dim_tags = generate_tags_df(data_dict)
 
-    # Insert tags into entry notes
+    # save output
+    fct_entries.to_csv("fct_entries.csv", index=False)
+    dim_activities.to_csv("dim_activities.csv", index=False)
+    dim_tags.to_csv("dim_tags.csv", index=False)
 
-    # Return dataframes
-    return fct_entries, dim_activities, dim_tags
+    return 'Done'
 
 def fetch_token(account_parameters):
     """
@@ -66,7 +71,7 @@ def fetch_token(account_parameters):
 
 def fetch_data(token, which_data):
     """
-    gets all of the data for the last 90 days
+    gets all of the data for the last 120 days
     """
 
     bearer_token = json.loads(token)
@@ -74,7 +79,7 @@ def fetch_data(token, which_data):
     if which_data == 'fctEntries':
 
         today = datetime.now()
-        ninty_days_ago = today - timedelta(days=90)
+        ninty_days_ago = today - timedelta(days=120)
         new_format = "%Y-%m-%dT%H:%M:%S.%f"
 
         now = today.strftime(new_format)[:-3]
@@ -146,6 +151,13 @@ def generate_entries_df(payload):
 
     data_frame = data_frame[['id', 'activityId', 'startTime', 'endTime', 'duration', 'note']]
 
+    # Report the polarity of every time entry
+    data_frame['polarity'] = ''
+    
+    for i in range(len(data_frame)):
+        blob = TextBlob(str(data_frame['note'][i]))
+        data_frame['polarity'][i] = blob.sentiment.polarity
+
     return data_frame
 
 def generate_activities_df(payload):
@@ -182,7 +194,6 @@ def generate_tags_df(payload):
     data_frame = data_frame[['id', 'label', 'key']]
 
     return data_frame
-
 
 if __name__ == "__main__":
     main()
