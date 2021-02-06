@@ -9,6 +9,19 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: book
+          POSTGRES_DB: TimeTracker
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out project
@@ -28,11 +41,6 @@ jobs:
       - name: Install dependencies
         run: |
           make install
-          
-      - name: Set up postgres database
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '11'
       
       # Lint the python files (controlled with Makefile)
       - name: Lint with pylint
