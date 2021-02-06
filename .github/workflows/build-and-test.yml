@@ -28,6 +28,11 @@ jobs:
       - name: Install dependencies
         run: |
           make install
+          
+      - name: Set up postgres database
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '11'
       
       # Lint the python files (controlled with Makefile)
       - name: Lint with pylint
