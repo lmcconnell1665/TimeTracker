@@ -13,7 +13,7 @@ app = DjangoDash('SimpleExample')
 
 app.css.append_css({'external_url': '/static/css/sb-admin-2.css'})
 
-os.chdir('/TimeTracker/')
+os.chdir('/')
 data = pd.read_csv('fct_entries.csv')
 
 data['duration'] = pd.to_timedelta(data['duration'])
