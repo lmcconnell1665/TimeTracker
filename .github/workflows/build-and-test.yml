@@ -41,7 +41,7 @@ jobs:
       ## Django specific steps ##
       # Make django migrations
       - name: Run django migrations
-        run: python manage.py migrate
+        run: python DjangoWebApp/manage.py migrate
       
       # Run django tests
       - name: Run django tests
