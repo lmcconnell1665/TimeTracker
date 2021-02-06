@@ -25,17 +25,28 @@ jobs:
         run: |
           make install
       
+      # Lint the python files (controlled with Makefile)
       - name: Lint with pylint
         run: |
           make lint
 
+      # Tests for main.py function (controlled with Makefile)
       - name: Test with pytest
         env:
           API_KEY: ${{ secrets.TIMEULAR_API_KEY }}
           API_SECRET: ${{ secrets.TIMEULAR_API_SECRET }}
         run: |
           make test
+          
+      ## Django specific steps ##
+      # Make django migrations
+      - name: Run django migrations
+        run: python manage.py migrate
+      
+      # Run django tests
+      - name: Run django tests
+        run: python manage.py test
 
-      # Logs the completed deployment
+      # Logs the completed build-and-test
       - name: Log successful build
         run: echo Build completed on `date`
