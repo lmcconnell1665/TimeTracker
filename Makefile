@@ -12,7 +12,7 @@ test:
 lint:
 	#hadolint Dockerfile 
 	#main python files
-	pylint --disable=C0301,W0612 main.py
+	pylint --disable=C0301,W0612,C0303,W0611,C0411 main.py
 	pylint test.py
 
 	#django python files
