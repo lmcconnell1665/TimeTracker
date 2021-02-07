@@ -8,19 +8,19 @@ import pandas as pd
 import os
 import datetime as dt
 import numpy as np
+from home.models import timeUsage
 
 app = DjangoDash('SimpleExample')
 
 app.css.append_css({'external_url': '/static/css/sb-admin-2.css'})
 
-# path_parent = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
-# os.chdir(path_parent)
-data = pd.read_csv('fct_entries.csv')
+# Get all timeUsage from the database
+data = pd.DataFrame(list(timeUsage.objects.all().values()))
 
 data['duration'] = pd.to_timedelta(data['duration'])
 data['date'] = pd.to_datetime(data['startTime'].values).strftime('%a, %b %d %Y')
 
-data_clean = data.groupby(['date'], as_index=False).agg({'duration': np.sum, 'polarity': np.sum})
+data_clean = data.groupby(['date'], as_index=False).agg({'duration': np.sum})
 
 data_clean['date'] = pd.to_datetime(data_clean['date'])
 data_clean['duration'] = pd.to_timedelta(data_clean['duration'])
@@ -46,7 +46,7 @@ app.layout = html.Div(
                     'marginTop': 20,
                     'marginLeft': 30}), #closes dropdown html.Div
 
-        dcc.Graph(id='graph1') # this is the graph we add
+        dcc.Graph(id='graph1'), # this is the graph we add
     ]
 )
 
@@ -57,7 +57,7 @@ app.layout = html.Div(
 def update_output(input_value):
     random_x = data_clean.iloc[len(data_clean)-input_value:len(data_clean),0]
     random_y = data_clean['duration'].dt.seconds/60/60
-    hover = data_clean['polarity']
+    hover = "Hover Text"
     
     figure = {
         'data': [
