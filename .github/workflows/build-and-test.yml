@@ -1,4 +1,5 @@
 name: Continuous Integration Pipeline
+# docs for django testing: https://www.hacksoft.io/blog/github-actions-in-action-setting-up-django-and-postgres
 
 # When action will run
 on: push
@@ -36,7 +37,7 @@ jobs:
           
       # Ubuntu packages required to connect to database
       - name: Install psycopg2 prerequisites
-        run: sudo apt-get install python-dev libpq-dev
+        run: sudo apt-get install libpq-dev
 
       - name: Install dependencies
         run: |
@@ -59,8 +60,9 @@ jobs:
       # Make django migrations
       - name: Run django migrations
         run:  |
-          python DjangoWebApp/manage.py makemigrations
           python DjangoWebApp/manage.py migrate
+          
+      # python DjangoWebApp/manage.py makemigrations #delete?
       
       # Run django tests
       - name: Run django tests
