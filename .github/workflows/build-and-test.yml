@@ -49,24 +49,24 @@ jobs:
           make lint
 
       # Tests for main.py function (controlled with Makefile)
-      - name: Test with pytest
-        env:
-          API_KEY: ${{ secrets.TIMEULAR_API_KEY }}
-          API_SECRET: ${{ secrets.TIMEULAR_API_SECRET }}
-        run: |
-          make test
+#       - name: Test with pytest
+#         env:
+#           API_KEY: ${{ secrets.TIMEULAR_API_KEY }}
+#           API_SECRET: ${{ secrets.TIMEULAR_API_SECRET }}
+#         run: |
+#           make test
           
       ## Django specific steps ##
       # Make django migrations
-      - name: Run django migrations
-        run:  |
-          python DjangoWebApp/manage.py migrate
+#       - name: Run django migrations
+#         run:  |
+#           python DjangoWebApp/manage.py migrate
           
       # python DjangoWebApp/manage.py makemigrations #delete?
       
       # Run django tests
-      - name: Run django tests
-        run: python DjangoWebApp/manage.py test
+#       - name: Run django tests
+#         run: python DjangoWebApp/manage.py test
 
       # Logs the completed build-and-test
       - name: Log successful build
